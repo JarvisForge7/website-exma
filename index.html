@@ -2,91 +2,282 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JARVIS // BLACK OPS TERMINAL</title>
 
-<title>Website</title>
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    color:#00ff66;
+    font-family:Consolas,"Courier New",monospace;
+    overflow:hidden;
 }
 
-body {
-    margin: 0;
-    background: #000;
-    color: #00ff00;
-    font-family: monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
+body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.box {
-    width: 90%;
-    max-width: 500px;
-    padding: 25px;
+/* MATRIX */
+
+#matrix{
+    position:fixed;
+    inset:0;
+    opacity:.11;
 }
 
-h1 {
-    color: red;
-    font-size: 28px;
+/* SCANLINES */
+
+body:after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
 }
 
-#scan {
-    font-size: 18px;
+/* TERMINAL */
+
+.terminal{
+    position:relative;
+    width:95%;
+    max-width:1100px;
+    height:720px;
+    background:rgba(0,6,3,.97);
+    border:1px solid #00ff66;
+    box-shadow:
+        0 0 35px rgba(0,255,100,.2),
+        inset 0 0 80px rgba(0,255,100,.035);
+    border-radius:8px;
+    overflow:hidden;
 }
 
-.progress {
-    width: 100%;
-    height: 18px;
-    background: #222;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 20px 0;
+.top{
+    height:46px;
+    background:#061009;
+    border-bottom:1px solid #164d2b;
+    display:flex;
+    align-items:center;
+    padding:0 15px;
 }
 
-#bar {
-    width: 0%;
-    height: 100%;
-    background: #00ff00;
-    transition: width 0.15s;
+.dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    margin-right:7px;
 }
 
-#finalPrank {
-    display: none;
-    margin-top: 25px;
+.r{background:#ff3b30}
+.y{background:#ffd000}
+.g{
+    background:#00ff66;
+    box-shadow:0 0 10px #00ff66;
 }
 
-.big-emoji {
-    font-size: 120px;
-    line-height: 1;
-    animation: pop 0.6s ease;
+.title{
+    margin-left:12px;
+    color:#baffd0;
+    font-size:13px;
 }
 
-#finalPrank h2 {
-    color: white;
-    font-size: 38px;
-    margin: 15px 0 5px;
+.main{
+    padding:16px;
+    height:calc(100% - 46px);
 }
 
-#finalPrank p {
-    font-size: 18px;
+.banner{
+    color:#00eaff;
+    font-size:14px;
+    margin-bottom:12px;
 }
 
-@keyframes pop {
-    0% {
-        transform: scale(0);
-        opacity: 0;
+/* GRID */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:12px;
+    height:570px;
+}
+
+.panel{
+    border:1px solid #123b23;
+    background:rgba(0,10,5,.65);
+    padding:10px;
+    overflow:hidden;
+}
+
+.panelTitle{
+    color:#00eaff;
+    border-bottom:1px solid #123b23;
+    padding-bottom:6px;
+    margin-bottom:8px;
+    font-size:12px;
+}
+
+#logs{
+    height:500px;
+    overflow:hidden;
+    font-size:12px;
+    line-height:1.55;
+}
+
+.log{
+    animation:appear .12s ease;
+}
+
+.ok{color:#00ff66}
+.info{color:#00eaff}
+.warn{color:#ffd000}
+.danger{color:#ff3030}
+.gray{color:#65766b}
+
+/* METERS */
+
+.metric{
+    margin-bottom:20px;
+}
+
+.metricLabel{
+    display:flex;
+    justify-content:space-between;
+    color:#aaa;
+    font-size:11px;
+    margin-bottom:5px;
+}
+
+.meter{
+    height:10px;
+    background:#020804;
+    border:1px solid #164d2b;
+}
+
+.meter div{
+    height:100%;
+    width:0%;
+    background:#00ff66;
+    box-shadow:0 0 10px #00ff66;
+}
+
+.threat{
+    color:#ffd000;
+    text-align:center;
+    font-size:20px;
+    padding:12px 0;
+    border:1px solid #5b4b00;
+    margin-top:15px;
+}
+
+/* PROGRESS */
+
+.bottom{
+    position:absolute;
+    left:16px;
+    right:16px;
+    bottom:12px;
+}
+
+.progress{
+    height:14px;
+    border:1px solid #164d2b;
+    background:#020804;
+}
+
+#bar{
+    width:0%;
+    height:100%;
+    background:#00ff66;
+    box-shadow:0 0 14px #00ff66;
+}
+
+#status{
+    font-size:11px;
+    color:#aaa;
+    margin-top:5px;
+}
+
+/* FINAL */
+
+#final{
+    display:none;
+    position:absolute;
+    inset:46px 0 0;
+    background:#000;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+}
+
+.glitch{
+    font-size:64px;
+    color:#ff3030;
+    font-weight:bold;
+    text-shadow:
+        4px 0 #00ffff,
+        -4px 0 #ff00ff;
+    animation:glitch .16s infinite;
+}
+
+.finalGreen{
+    color:#00ff66;
+    font-size:22px;
+    margin-top:15px;
+}
+
+.prank{
+    color:#ffd000;
+    font-size:30px;
+    font-weight:bold;
+    margin-top:30px;
+}
+
+.note{
+    color:#777;
+    margin-top:14px;
+}
+
+@keyframes appear{
+    from{opacity:0;transform:translateX(-6px)}
+    to{opacity:1;transform:translateX(0)}
+}
+
+@keyframes glitch{
+    0%{transform:translate(0)}
+    25%{transform:translate(-3px,1px)}
+    50%{transform:translate(3px,-1px)}
+    75%{transform:translate(-1px,-2px)}
+    100%{transform:translate(0)}
+}
+
+@media(max-width:700px){
+    .dashboard{
+        grid-template-columns:1fr;
     }
 
-    70% {
-        transform: scale(1.2);
-        opacity: 1;
+    .terminal{
+        height:95vh;
     }
 
-    100% {
-        transform: scale(1);
+    .rightPanel{
+        display:none;
+    }
+
+    .glitch{
+        font-size:38px;
     }
 }
 </style>
@@ -94,52 +285,342 @@ h1 {
 
 <body>
 
-<div class="box">
+<canvas id="matrix"></canvas>
 
-    <h1>⚠️ SYSTEM ALERT ⚠️</h1>
+<div class="terminal">
 
-    <p>Security scan in progress...</p>
+<div class="top">
+    <span class="dot r"></span>
+    <span class="dot y"></span>
+    <span class="dot g"></span>
 
-    <p id="scan">Scanning device... 0%</p>
+    <span class="title">
+        JARVIS // BLACK OPS SECURITY TERMINAL
+    </span>
+</div>
 
-    <div class="progress">
-        <div id="bar"></div>
+<div class="main">
+
+<div class="banner">
+    [ JARVIS CORE ] — AUTHORIZED SIMULATION ENVIRONMENT
+</div>
+
+<div class="dashboard">
+
+<div class="panel">
+
+<div class="panelTitle">
+    LIVE SECURITY TELEMETRY
+</div>
+
+<div id="logs"></div>
+
+</div>
+
+<div class="panel rightPanel">
+
+<div class="panelTitle">
+    SYSTEM TELEMETRY
+</div>
+
+<div class="metric">
+    <div class="metricLabel">
+        <span>CPU ANALYSIS</span>
+        <span id="cpuText">0%</span>
     </div>
-
-    <div id="finalPrank">
-        <div class="big-emoji">😂</div>
-        <h2>PRANK!</h2>
-        <p>Your phone is completely safe 😎</p>
+    <div class="meter">
+        <div id="cpu"></div>
     </div>
+</div>
+
+<div class="metric">
+    <div class="metricLabel">
+        <span>MEMORY SCAN</span>
+        <span id="memText">0%</span>
+    </div>
+    <div class="meter">
+        <div id="mem"></div>
+    </div>
+</div>
+
+<div class="metric">
+    <div class="metricLabel">
+        <span>NETWORK ANALYSIS</span>
+        <span id="netText">0%</span>
+    </div>
+    <div class="meter">
+        <div id="net"></div>
+    </div>
+</div>
+
+<div class="metric">
+    <div class="metricLabel">
+        <span>ENCRYPTION</span>
+        <span id="encText">0%</span>
+    </div>
+    <div class="meter">
+        <div id="enc"></div>
+    </div>
+</div>
+
+<div class="threat">
+    THREAT LEVEL<br>
+    <b>ANALYZING...</b>
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom">
+
+<div class="progress">
+    <div id="bar"></div>
+</div>
+
+<div id="status">
+    INITIALIZING SECURITY ENGINE...
+</div>
+
+</div>
+
+</div>
+
+<div id="final">
+
+<div class="glitch">
+    ACCESS GRANTED
+</div>
+
+<div class="finalGreen">
+    SECURITY SIMULATION COMPLETE
+</div>
+
+<div class="prank">
+    😂 BRO... YOU GOT PRANKED!
+</div>
+
+<div class="note">
+    No real device, account, password or website data was accessed.
+</div>
+
+</div>
 
 </div>
 
 <script>
 
-let p = 0;
+/* MATRIX */
 
-const scan = setInterval(() => {
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
 
-    p += 10;
+function resize(){
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
+}
 
-    document.getElementById("scan").innerHTML =
-        "Scanning device... " + p + "%";
+resize();
 
-    document.getElementById("bar").style.width =
-        p + "%";
+window.addEventListener("resize",resize);
 
-    if (p >= 100) {
+const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+const font=14;
 
-        clearInterval(scan);
+let drops=Array(
+    Math.floor(innerWidth/font)
+).fill(1);
 
-        document.getElementById("scan").innerHTML =
-            "Scan complete!";
+function matrix(){
 
-        document.getElementById("finalPrank").style.display =
-            "block";
+    ctx.fillStyle="rgba(0,0,0,.08)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="#00ff66";
+    ctx.font=font+"px monospace";
+
+    for(let i=0;i<drops.length;i++){
+
+        const c=
+            chars[Math.floor(Math.random()*chars.length)];
+
+        ctx.fillText(
+            c,
+            i*font,
+            drops[i]*font
+        );
+
+        if(
+            drops[i]*font>canvas.height &&
+            Math.random()>.975
+        ){
+            drops[i]=0;
+        }
+
+        drops[i]++;
     }
+}
 
-}, 200);
+setInterval(matrix,50);
+
+
+/* ENGINE */
+
+const logs=document.getElementById("logs");
+const bar=document.getElementById("bar");
+const status=document.getElementById("status");
+const final=document.getElementById("final");
+
+const sleep=ms=>
+    new Promise(r=>setTimeout(r,ms));
+
+function log(text,type="ok"){
+
+    const d=document.createElement("div");
+
+    d.className="log "+type;
+
+    d.textContent=text;
+
+    logs.appendChild(d);
+
+    logs.scrollTop=logs.scrollHeight;
+}
+
+function hex(n){
+
+    const chars="0123456789ABCDEF";
+
+    let x="";
+
+    for(let i=0;i<n;i++)
+        x+=chars[
+            Math.floor(Math.random()*chars.length)
+        ];
+
+    return x;
+}
+
+function meter(id,textId,value){
+
+    document.getElementById(id).style.width=
+        value+"%";
+
+    document.getElementById(textId).textContent=
+        value+"%";
+}
+
+async function run(){
+
+const stages=[
+
+["[BOOT] JARVIS kernel loading...","info",900],
+["[BOOT] Secure runtime initialized","ok",700],
+["[CRYPTO] Encryption engine online","info",900],
+["[NET] Establishing secure channel...","info",1000],
+["[NET] Handshake verified","ok",800],
+["[SCAN] Mapping application architecture...","warn",900],
+["[SCAN] Inspecting client resources...","warn",1000],
+["[SCAN] Verifying session boundaries...","warn",900],
+["[AUTH] Authorization layer detected","info",900],
+["[DATA] Integrity analysis started...","info",1000]
+
+];
+
+for(const s of stages){
+
+    log(s[0],s[1]);
+
+    await sleep(s[2]);
+
+}
+
+
+/* TELEMETRY */
+
+log("");
+log("──── LIVE PACKET TELEMETRY ────","info");
+
+for(let i=0;i<22;i++){
+
+    log(
+        `[TRACE ${String(i+1).padStart(2,"0")}] `+
+        `NODE-${hex(5)} `+
+        `SID-${hex(7)} `+
+        `HASH:${hex(10)}`,
+        "ok"
+    );
+
+    meter(
+        "cpu",
+        "cpuText",
+        Math.floor(30+Math.random()*60)
+    );
+
+    meter(
+        "mem",
+        "memText",
+        Math.floor(35+Math.random()*50)
+    );
+
+    meter(
+        "net",
+        "netText",
+        Math.floor(40+Math.random()*55)
+    );
+
+    await sleep(180);
+
+}
+
+
+/* ENCRYPTION */
+
+log("");
+log("[CRYPTO] Running integrity verification...","warn");
+
+for(let p=0;p<=100;p+=2){
+
+    meter("enc","encText",p);
+
+    bar.style.width=p+"%";
+
+    status.textContent=
+        "ENCRYPTION ANALYSIS: "+p+"%";
+
+    await sleep(85);
+
+}
+
+
+/* FINAL STAGE */
+
+await sleep(900);
+
+log("[!] PRIVILEGED SECURITY LAYER DETECTED","danger");
+
+await sleep(1100);
+
+log("[!] SECONDARY AUTHORIZATION REQUIRED","danger");
+
+await sleep(1200);
+
+log("[JARVIS] Controlled verification initiated...","warn");
+
+await sleep(1500);
+
+log("[JARVIS] Verification successful.","ok");
+
+await sleep(1300);
+
+status.textContent=
+    "SIMULATION COMPLETE — STANDING BY";
+
+final.style.display="flex";
+
+}
+
+run();
 
 </script>
 
